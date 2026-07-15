@@ -88,7 +88,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="p-3 text-center text-gray-500">Wala pang todo. Mag-add ka!</td>
+                                    <td colspan="10" class="p-3 text-center text-gray-500">No record found!</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -181,7 +181,7 @@
                         </div>
                     </div>
 
-                    <p class="text-xs text-gray-400 mb-4">Created At at Updated At ay awtomatikong ita-tala.</p>
+                    <p class="text-xs text-gray-400 mb-4">Created and Updated automatically</p>
 
                     <div class="flex justify-end gap-2 pt-2 border-t">
                         <button type="button" @click="showModal = false"
