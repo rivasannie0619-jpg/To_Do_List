@@ -7,11 +7,42 @@ use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
-    public function index()
-    {
-        $todos = Todo::latest()->get();
-        return view('todos.index', compact('todos'));
+    public function index(Request $request)
+{
+    $query = Todo::query();
+
+    // Search by title or description
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%");
+        });
     }
+
+    // Filter by status
+    if ($request->filled('status') && $request->status !== 'All') {
+        $query->where('status', $request->status);
+    }
+
+    $todos = $query->latest()->get();
+
+    // Counts for the dashboard-style stats
+    $totalCount = Todo::count();
+    $notStartedCount = Todo::where('status', 'Not Started')->count();
+    $inProgressCount = Todo::where('status', 'In Progress')->count();
+    $completedCount = Todo::where('status', 'Completed')->count();
+    $cancelledCount = Todo::where('status', 'Cancelled')->count();
+
+    return view('todos.index', compact(
+        'todos',
+        'totalCount',
+        'notStartedCount',
+        'inProgressCount',
+        'completedCount',
+        'cancelledCount'
+    ));
+}
 
     public function create()
     {

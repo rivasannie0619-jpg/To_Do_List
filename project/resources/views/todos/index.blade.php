@@ -7,6 +7,31 @@
 
     <div class="py-12" x-data="{ showModal: {{ $errors->any() ? 'true' : 'false' }} }">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+
+            {{-- STATS / DASHBOARD CARDS --}}
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-4 border">
+                    <p class="text-gray-500 text-xs uppercase font-medium">Total Tasks</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $totalCount }}</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-4 border">
+                    <p class="text-gray-500 text-xs uppercase font-medium">Not Started</p>
+                    <p class="text-2xl font-bold text-gray-600">{{ $notStartedCount }}</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-4 border">
+                    <p class="text-gray-500 text-xs uppercase font-medium">In Progress</p>
+                    <p class="text-2xl font-bold text-blue-600">{{ $inProgressCount }}</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-4 border">
+                    <p class="text-gray-500 text-xs uppercase font-medium">Completed</p>
+                    <p class="text-2xl font-bold text-green-600">{{ $completedCount }}</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-4 border">
+                    <p class="text-gray-500 text-xs uppercase font-medium">Cancelled</p>
+                    <p class="text-2xl font-bold text-red-600">{{ $cancelledCount }}</p>
+                </div>
+            </div>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
 
                 @if (session('success'))
@@ -15,9 +40,37 @@
                     </div>
                 @endif
 
-                <div class="mb-4">
+                {{-- SEARCH BAR + DROPDOWN FILTER + ADD BUTTON --}}
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                    <form method="GET" action="{{ route('todos.index') }}" class="flex flex-col sm:flex-row gap-2 flex-1">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="Search title or description..."
+                            class="border-gray-300 rounded shadow-sm p-2 border text-sm w-full sm:w-64">
+
+                        <select name="status" class="border-gray-300 rounded shadow-sm p-2 border text-sm">
+                            <option value="All">All Status</option>
+                            @foreach (['Not Started', 'In Progress', 'Completed', 'Cancelled'] as $option)
+                                <option value="{{ $option }}" {{ request('status') == $option ? 'selected' : '' }}>
+                                    {{ $option }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <button type="submit"
+                            class="bg-gray-900 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-gray-800">
+                            SEARCH
+                        </button>
+
+                        @if (request('search') || (request('status') && request('status') !== 'All'))
+                            <a href="{{ route('todos.index') }}"
+                                class="border border-gray-300 text-gray-700 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-50 text-center">
+                                RESET
+                            </a>
+                        @endif
+                    </form>
+
                     <button @click="showModal = true" type="button"
-                        class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-800 font-semibold text-sm">
+                        class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-800 font-semibold text-sm whitespace-nowrap">
                         + ADD TODO
                     </button>
                 </div>
@@ -88,7 +141,13 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="p-3 text-center text-gray-500">No record found!</td>
+                                    <td colspan="10" class="p-3 text-center text-gray-500">
+                                        @if (request('search') || request('status'))
+                                            Walang nahanap na todo na tumugma sa search/filter mo.
+                                        @else
+                                            Wala pang todo. Mag-add ka!
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -181,7 +240,7 @@
                         </div>
                     </div>
 
-                    <p class="text-xs text-gray-400 mb-4">Created and Updated automatically</p>
+                    <p class="text-xs text-gray-400 mb-4">Created At at Updated At ay awtomatikong ita-tala.</p>
 
                     <div class="flex justify-end gap-2 pt-2 border-t">
                         <button type="button" @click="showModal = false"
