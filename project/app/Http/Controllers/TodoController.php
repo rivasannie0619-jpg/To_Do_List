@@ -27,21 +27,8 @@ class TodoController extends Controller
 
    $todos = $query->latest()->paginate(10)->withQueryString();
 
-    // Counts for the dashboard-style stats
-    $totalCount = Todo::count();
-    $notStartedCount = Todo::where('status', 'Not Started')->count();
-    $inProgressCount = Todo::where('status', 'In Progress')->count();
-    $completedCount = Todo::where('status', 'Completed')->count();
-    $cancelledCount = Todo::where('status', 'Cancelled')->count();
-
-    return view('todos.index', compact(
-        'todos',
-        'totalCount',
-        'notStartedCount',
-        'inProgressCount',
-        'completedCount',
-        'cancelledCount'
-    ));
+    
+   return view('todos.index', compact('todos'));
 }
 
     public function create()

@@ -8,29 +8,6 @@
     <div class="py-12" x-data="{ showModal: {{ $errors->any() ? 'true' : 'false' }}, showDetails: false, selectedTodo: null }">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
  
-            {{-- STATS / DASHBOARD CARDS --}}
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-                <div class="bg-white rounded-lg shadow-sm p-4 border">
-                    <p class="text-gray-500 text-xs uppercase font-medium">Total Tasks</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ $totalCount }}</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-4 border">
-                    <p class="text-gray-500 text-xs uppercase font-medium">Not Started</p>
-                    <p class="text-2xl font-bold text-gray-600">{{ $notStartedCount }}</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-4 border">
-                    <p class="text-gray-500 text-xs uppercase font-medium">In Progress</p>
-                    <p class="text-2xl font-bold text-blue-600">{{ $inProgressCount }}</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-4 border">
-                    <p class="text-gray-500 text-xs uppercase font-medium">Completed</p>
-                    <p class="text-2xl font-bold text-green-600">{{ $completedCount }}</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-4 border">
-                    <p class="text-gray-500 text-xs uppercase font-medium">Cancelled</p>
-                    <p class="text-2xl font-bold text-red-600">{{ $cancelledCount }}</p>
-                </div>
-            </div>
  
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
  

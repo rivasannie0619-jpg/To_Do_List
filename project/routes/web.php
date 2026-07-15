@@ -9,7 +9,13 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $totalCount = \App\Models\Todo::count();
+    $notStartedCount = \App\Models\Todo::where('status', 'Not Started')->count();
+    $inProgressCount = \App\Models\Todo::where('status', 'In Progress')->count();
+    $completedCount = \App\Models\Todo::where('status', 'Completed')->count();
+    $cancelledCount = \App\Models\Todo::where('status', 'Cancelled')->count();
+
+    return view('dashboard', compact('totalCount', 'notStartedCount', 'inProgressCount', 'completedCount', 'cancelledCount'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
