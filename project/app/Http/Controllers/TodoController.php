@@ -25,7 +25,7 @@ class TodoController extends Controller
         $query->where('status', $request->status);
     }
 
-    $todos = $query->latest()->get();
+   $todos = $query->latest()->paginate(10)->withQueryString();
 
     // Counts for the dashboard-style stats
     $totalCount = Todo::count();
