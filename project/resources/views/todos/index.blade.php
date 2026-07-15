@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12" x-data="{ showModal: {{ $errors->any() ? 'true' : 'false' }} }">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
 
@@ -16,9 +16,10 @@
                 @endif
 
                 <div class="mb-4">
-                    <a href="{{ route('todos.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        + Add New Todo
-                    </a>
+                    <button @click="showModal = true" type="button"
+                        class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-800 font-semibold text-sm">
+                        + ADD TODO
+                    </button>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -94,6 +95,105 @@
                     </table>
                 </div>
 
+            </div>
+        </div>
+
+        {{-- MODAL: Add New Todo --}}
+        <div x-show="showModal" x-cloak
+             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+             style="display: none;">
+            <div @click.outside="showModal = false"
+                 class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+
+                <div class="px-6 py-4 border-b">
+                    <h3 class="text-lg font-semibold text-gray-900">Add New Todo</h3>
+                </div>
+
+                <form action="{{ route('todos.store') }}" method="POST" class="p-6">
+                    @csrf
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Task Title</label>
+                        <input type="text" name="title" value="{{ old('title') }}"
+                            class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                        @error('title')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Description</label>
+                        <textarea name="description" rows="3"
+                            class="w-full border-gray-300 rounded shadow-sm p-2 border">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">Status</label>
+                            <select name="status" class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                                @foreach (['Not Started', 'In Progress', 'Completed', 'Cancelled'] as $option)
+                                    <option value="{{ $option }}" {{ old('status') == $option ? 'selected' : '' }}>
+                                        {{ $option }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('status')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">Priority</label>
+                            <select name="priority" class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                                @foreach (['Low', 'Medium', 'High', 'Urgent'] as $option)
+                                    <option value="{{ $option }}" {{ old('priority') == $option ? 'selected' : '' }}>
+                                        {{ $option }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('priority')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">Due Date</label>
+                            <input type="datetime-local" name="due_date" value="{{ old('due_date') }}"
+                                class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                            @error('due_date')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1 text-sm">Category</label>
+                            <input type="text" name="category" value="{{ old('category') }}"
+                                placeholder="Work, Personal, Study..."
+                                class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                            @error('category')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mb-4">Created At at Updated At ay awtomatikong ita-tala.</p>
+
+                    <div class="flex justify-end gap-2 pt-2 border-t">
+                        <button type="button" @click="showModal = false"
+                            class="border border-gray-300 text-gray-700 px-4 py-2 rounded text-sm font-semibold hover:bg-gray-50">
+                            CANCEL
+                        </button>
+                        <button type="submit"
+                            class="bg-gray-900 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-gray-800">
+                            SAVE
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
