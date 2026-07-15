@@ -31,11 +31,56 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4 flex items-center">
-                        <input type="checkbox" name="is_completed" id="is_completed" value="1"
-                            {{ $todo->is_completed ? 'checked' : '' }}
-                            class="rounded border-gray-300 mr-2">
-                        <label for="is_completed" class="text-gray-700 font-medium">Mark as Completed</label>
+                    <div class="mb-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1">Status</label>
+                            <select name="status" class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                                @foreach (['Not Started', 'In Progress', 'Completed', 'Cancelled'] as $option)
+                                    <option value="{{ $option }}" {{ old('status', $todo->status) == $option ? 'selected' : '' }}>
+                                        {{ $option }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('status')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1">Priority</label>
+                            <select name="priority" class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                                @foreach (['Low', 'Medium', 'High', 'Urgent'] as $option)
+                                    <option value="{{ $option }}" {{ old('priority', $todo->priority) == $option ? 'selected' : '' }}>
+                                        {{ $option }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('priority')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1">Due Date</label>
+                            <input type="datetime-local" name="due_date"
+                                value="{{ old('due_date', $todo->due_date ? $todo->due_date->format('Y-m-d\TH:i') : '') }}"
+                                class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                            @error('due_date')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-1">Category</label>
+                            <input type="text" name="category" value="{{ old('category', $todo->category) }}"
+                                placeholder="Work, Personal, Study, Errands..."
+                                class="w-full border-gray-300 rounded shadow-sm p-2 border">
+                            @error('category')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="flex gap-2">
